@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dice.dart';
 
 void main() {
   runApp(const Login());
@@ -46,6 +47,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController idCtrler = TextEditingController();
+  TextEditingController pwdCtrler = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,55 +62,105 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
         title: Text(widget.title),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.only(top: 50.0),
-            ),
-            const Center(
-              child: Image(
-                image: AssetImage('assets/login.gif'),
-                width: 150.0,
-                height: 100.0,
-              ),
-            ),
-            Form(
-              child: Theme(
-                data: ThemeData(
-                  primaryColor: Colors.blue,
-                  inputDecorationTheme: const InputDecorationTheme(
-                    labelStyle: TextStyle(
-                      color: Colors.redAccent,
-                      fontSize: 15.0,
+      body: Builder(
+        builder: (context) {
+          return GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.only(top: 50.0),
+                  ),
+                  const Center(
+                    child: Image(
+                      image: AssetImage('assets/login.gif'),
+                      width: 130.0,
+                      height: 120.0,
                     ),
                   ),
-                ),
-                child: Container(
-                  padding: const EdgeInsets.all(50.0),
-                  child: Column(
-                    children: const <Widget>[
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Enter your @email ',
+                  Form(
+                    child: Theme(
+                      data: ThemeData(
+                        primaryColor: Colors.blue,
+                        inputDecorationTheme: const InputDecorationTheme(
+                          labelStyle: TextStyle(
+                            color: Colors.redAccent,
+                            fontSize: 15.0,
+                          ),
                         ),
-                        keyboardType: TextInputType.emailAddress,
                       ),
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Enter Password',
+                      child: Container(
+                        padding: const EdgeInsets.all(50.0),
+                        child: Column(
+                          children: <Widget>[
+                            TextField(
+                              controller: idCtrler,
+                              decoration: const InputDecoration(
+                                labelText: 'Enter your @email ',
+                              ),
+                              keyboardType: TextInputType.emailAddress,
+                            ),
+                            TextField(
+                              controller: pwdCtrler,
+                              decoration: const InputDecoration(
+                                labelText: 'Enter Password',
+                              ),
+                              keyboardType: TextInputType.text,
+                              obscureText: true,
+                            ),
+                            const SizedBox(
+                              width: 30.0,
+                              height: 30.0,
+                            ),
+                            TextButton.icon(
+                              label: const Text('Login'),
+                              icon: const Icon(Icons.arrow_forward),
+                              onPressed: () {
+                                if (idCtrler.text == 'snake0207' &&
+                                    pwdCtrler.text == '1234') {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              const Dice()));
+                                } else if (idCtrler.text == 'snake0207' &&
+                                    pwdCtrler.text != '1234') {
+                                  showSnackBar(context);
+                                } else if (idCtrler.text != 'snake0207' &&
+                                    pwdCtrler.text == '1234') {
+                                  showSnackBar(context);
+                                } else {
+                                  showSnackBar(context);
+                                }
+                              },
+                            ),
+                          ],
                         ),
-                        keyboardType: TextInputType.text,
-                        obscureText: true,
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
+}
+
+void showSnackBar(BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+    content: Text(
+      'Invalid Login information !!',
+      style: TextStyle(
+        color: Colors.black,
+      ),
+    ),
+    backgroundColor: Colors.blue,
+    duration: Duration(seconds: 3),
+  ));
 }
